@@ -1,0 +1,63 @@
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+
+
+model user {
+    id       			Int    			@id @default(autoincrement())
+    name     			String			@db.VarChar(255)
+    surname  			String			@db.VarChar(255)
+    address  			String			@db.Text
+    phone    			Int
+    mail     			String			@db.VarChar(255)
+    password 			String			@db.VarChar(255)
+	account				account[]
+}
+
+
+model account {
+	id					Int				@id @default(autoincrement())
+	owner_id			Int
+	owner				user			@relation(fields: [owner_id], references: [id])
+	name				String			@db.VarChar(255)
+	balance				Float
+	deposit				deposit[]
+	transfer			transfer[]
+	expenditure			expenditure[]
+}
+
+model deposit {
+	id					Int				@id @default(autoincrement())
+	account_id			Int
+	account				account			@relation(fields: [account_id], references: [id])
+	date				DateTime		@db.Date
+	amount				Float
+	description			String			@db.Text
+}
+
+model transfer {
+	id					Int				@id @default(autoincrement())
+	account_id			Int
+	account				account			@relation(fields: [account_id], references: [id])
+	date				DateTime		@db.Date
+	receiver_name		String			@db.VarChar(255)
+	receiver_account	Int
+	amount				Float
+	description			String			@db.Text
+}
+
+model expenditure {
+	id					Int				@id @default(autoincrement())
+	account_id			Int
+	account				account			@relation(fields: [account_id], references: [id])
+	date				DateTime		@db.Date()
+	receiver_name		String			@db.VarChar(255)
+	amount				Float
+	description			String			@db.Text
+}
