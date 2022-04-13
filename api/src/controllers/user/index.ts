@@ -68,8 +68,8 @@ const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // check password
-    const valid: boolean = await bcrypt.compare(req.body.password, user.password)
-    if (!valid) {
+    const isValid: boolean = await bcrypt.compare(req.body.password, user.password)
+    if (!isValid) {
         res.status(404).send({ "error": "Incorrect password", "token": null })
         return;
     }
@@ -80,7 +80,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
         userMail: user.mail
     }, process.env.JWT_SECRET,
     {
-        expiresIn: '5m'
+        expiresIn: '24h'
     });
     res.status(200).send({ "error": null, "token": token })
 
@@ -98,6 +98,7 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
     } catch (error) {
         res.status(500).send({ "error": error, "response": null })
     }
+
 }
 
 
